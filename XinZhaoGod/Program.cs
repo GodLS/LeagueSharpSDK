@@ -41,8 +41,8 @@ namespace XinZhaoGod
         private static void OnAction(object sender, Orbwalker.OrbwalkerActionArgs e)
         {
             if (e.Target == null) return;
-            if (e.Target.Type != GameObjectType.obj_AI_Hero || e.Target.Type != GameObjectType.obj_AI_Minion) return;
-            var target = (Obj_AI_Base) e.Target;
+            if (e.Target.Type == GameObjectType.obj_AI_Turret || e.Target.Type == GameObjectType.obj_Barracks || e.Target.Type == GameObjectType.obj_BarracksDampener) return;
+            var target = (Obj_AI_Base)e.Target;
             {
                 if (e.Type == OrbwalkerType.BeforeAttack)
                 {
@@ -70,7 +70,7 @@ namespace XinZhaoGod
                  Orbwalker.ActiveMode != OrbwalkerMode.Hybrid || target.Type != GameObjectType.obj_AI_Hero) &&
                 (!_config["LaneClear"]["LaneClearQ"].GetValue<MenuBool>().Value || !Spells.Q.IsReady() ||
                  Orbwalker.ActiveMode != OrbwalkerMode.LaneClear)) return;
-            var aaDelay = Player.AttackDelay*100 + Game.Ping/2f;
+            var aaDelay = Player.AttackDelay * 100 + Game.Ping / 2f;
             DelayAction.Add(aaDelay, () => Spells.Q.Cast());
         }
 
@@ -134,7 +134,7 @@ namespace XinZhaoGod
             if (target == null)
                 return;
 
-            if (_config["Harass"]["ComboE"].GetValue<MenuBool>().Value && Spells.E.IsReady() && target.IsValidTarget() &&
+            if (_config["Harass"]["HarassE"].GetValue<MenuBool>().Value && Spells.E.IsReady() && target.IsValidTarget() &&
                 Player.Distance(target) >= _config["Harass"]["HarassEDistance"].GetValue<MenuSlider>().Value)
                 Spells.E.CastOnUnit(target);
         }
